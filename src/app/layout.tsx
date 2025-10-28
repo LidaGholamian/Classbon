@@ -1,7 +1,8 @@
-import { Footer } from "./_components/footer/footer";
-import { Header } from "./_components/header/header";
 import "./globals.css";
 import { Vazirmatn, Figtree } from "next/font/google";
+
+import { Footer } from "./_components/footer";
+import { Header } from "./_components/header";
 
 const figtree = Figtree({
   display: "swap",

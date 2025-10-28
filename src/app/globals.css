@@ -97,3 +97,9 @@
     font-family: var(--font-figtree);
   }
 }
+
+@layer utilities {
+  .container {
+    margin: 0 auto;
+  }
+}
