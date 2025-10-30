@@ -5,7 +5,7 @@ import { SvgIcons } from "@/app/_components/icons/icon.types";
 export default function SvgIcon(props:SvgIcons) {
   return (
     <BaseIcon {...props}>
-      <path d="M19.561 7.44385L12.005 14.9998L8.228 11.2218"/><path d="M21 12C21 16.971 16.971 21 12 21C7.029 21 3 16.971 3 12C3 7.029 7.029 3 12 3C13.453 3 14.821 3.353 16.036 3.964"/>
+      <path fillRule="evenodd" clipRule="evenodd" d="M12 2.896L14.935 8.889L21.5 9.856L16.75 14.518L17.871 21.104L12 17.993L6.129 21.104L7.25 14.518L2.5 9.856L9.064 8.889L12 2.896Z"/>
     </BaseIcon>
   );
 }

@@ -1,0 +1,38 @@
+import { Badge } from "../badge";
+import Toman from "../icons/src/toman";
+import { Size } from "../types/size.type";
+import { PriceProp } from "./price.types";
+
+const sizeClasses: Record<Size, { textSize: string; svgSize: number }> = {
+  tiny: { textSize: "text-md", svgSize: 16 },
+  small: { textSize: "text-xl", svgSize: 18 },
+  normal: { textSize: "text-2xl", svgSize: 20 },
+  large: { textSize: "text-3xl", svgSize: 22 },
+};
+
+export const Price: React.FC<PriceProp> = ({
+  size = "normal",
+  text = "رایگان",
+  price,
+  className,
+}: PriceProp) => {
+  return (
+    <>
+      {price != null && price > 0 ? (
+        <span className="flex items-center font-bold gap-1 dark:text-white/90">
+          {price.toLocaleString()}
+          <Toman
+            strokeWidth={1}
+            width={sizeClasses[size].svgSize}
+            height={sizeClasses[size].svgSize}
+            viewBox="0 0 16 16"
+          />
+        </span>
+      ) : (
+        <Badge variant="success" size="small">
+          {text}
+        </Badge>
+      )}
+    </>
+  );
+};
