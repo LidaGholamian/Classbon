@@ -1,5 +1,5 @@
 import { Badge } from "@/app/_components/badge";
-import { Price } from "@/app/_components/price/price";
+import { Price } from "@/app/_components/price";
 import { CourseSummary } from "@/types/course-summary.interface";
 import Image from "next/image";
 import Link from "next/link";
@@ -37,7 +37,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
         <p>{subTitle}</p>
         <div className="flex items-center justify-between">
           <Badge variant="warning">{duration}</Badge>
-          <Price price={ basePrice } />
+          <Price price={ basePrice } size="small"/>
         </div>
       </div>
       <Link
