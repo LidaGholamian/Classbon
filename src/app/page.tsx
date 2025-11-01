@@ -6,6 +6,7 @@ import Feature from "./_components/feature/feature";
 import { Button } from "./_components/button";
 import { IconArrowLeftFill } from "./_components/icons/icons";
 import { BlogPostSummary } from "@/types/blog-post-summary.interface";
+import { BlogPostCardList } from "./(blog)/_components/blog-post-card-list";
 
 async function getNewestCourses(count: Number): Promise<CourseSummary[]> {
   const res = await fetch(
@@ -78,6 +79,28 @@ export default async function Home() {
             </Button>
           </div>
         </div>
+      </section>
+
+      <section className="px-2 my-40">
+        <div className="flex flex-col xl:flex-row gap-4 justify-center xl:justify-between items-center">
+          <div className="text-center xl:text-right">
+            <h2 className="text-2xl font-extrabold">
+              تازه‌ترین مقاله‌های آموزشی
+            </h2>
+            <p className="mt-3 text-lg">
+              به رایگان، به‌روزترین مقاله‌های دنیای تکنولوژی رو در اختیارت
+              می‌ذاریم؛ چون پیشرفتت برامون مهمه!
+            </p>
+          </div>
+          <Button
+            variant="neutral"
+            className="font-semibold"
+          >
+            همه مقاله‌ها
+            <IconArrowLeftFill fill="currentColor" />
+          </Button>
+        </div>
+        <BlogPostCardList posts={newestBlogPosts} />
       </section>
     </>
   );

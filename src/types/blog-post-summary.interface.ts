@@ -8,4 +8,5 @@ export interface BlogPostSummary {
     author: string;
     numberOfComments: number;
     isNew: boolean;
+    coverImage: string;
 }
