@@ -8,13 +8,15 @@ import { IconArrowLeftFill } from "./_components/icons/icons";
 import { BlogPostSummary } from "@/types/blog-post-summary.interface";
 import { BlogPostCardList } from "./(blog)/_components/blog-post-card-list";
 import { API_URL } from "@/configs/global";
+import { Suspense } from "react";
+import { CardPlaceholder } from "./_components/placeholder";
 
-async function getNewestCourses(count: Number): Promise<CourseSummary[]> {
-  const res = await fetch(`${API_URL}/courses/newest/${count}`, {
-    next: { revalidate: 24 * 60 * 60 },
-  });
-  return res.json();
-}
+// async function getNewestCourses(count: Number): Promise<CourseSummary[]> {
+//   const res = await fetch(`${API_URL}/courses/newest/${count}`, {
+//     next: { revalidate: 24 * 60 * 60 },
+//   });
+//   return res.json();
+// }
 
 async function getNewestPosts(count: number): Promise<BlogPostSummary[]> {
   const res = await fetch(`${API_URL}/blog/newest/${count}`);
@@ -22,13 +24,10 @@ async function getNewestPosts(count: number): Promise<BlogPostSummary[]> {
 }
 
 export default async function Home() {
-  const newestCoursesData = getNewestCourses(4);
+  // const newestCoursesData = getNewestCourses(4);
   const newestBlogPostsData = getNewestPosts(4);
   // Wait for the promises to resolve
-  const [newestCourses, newestBlogPosts] = await Promise.all([
-    newestCoursesData,
-    newestBlogPostsData,
-  ]);
+  const [newestBlogPosts] = await Promise.all([newestBlogPostsData]);
   console.log(newestBlogPosts);
 
   return (
@@ -48,7 +47,10 @@ export default async function Home() {
             برای به‌روز موندن، یاد گرفتن نکته‌های تازه ضروری‌ه!
           </p>
         </div>
-        <CourseCardList courses={newestCourses} />
+        <Suspense fallback={<CardPlaceholder count={4} className="mt-5" />}>
+          <CourseCardList courses={[]} />
+        </Suspense>
+        {/* <CourseCardList courses={newestCourses} /> */}
       </section>
       <section className="px-2 my-40">
         {/* <div className="sticky top-0 pt-0 text-center"> */}
@@ -90,10 +92,7 @@ export default async function Home() {
               می‌ذاریم؛ چون پیشرفتت برامون مهمه!
             </p>
           </div>
-          <Button
-            variant="neutral"
-            className="font-semibold"
-          >
+          <Button variant="neutral" className="font-semibold">
             همه مقاله‌ها
             <IconArrowLeftFill fill="currentColor" />
           </Button>
