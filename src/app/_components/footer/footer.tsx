@@ -64,7 +64,7 @@ export const Footer = () => {
             <div className="flex flex-col">
               <span className="text-base-content/50 ">Developed by:</span>
               <span className="text-lg font-bold tracking-wide">
-                Abbas Sepahvand
+                Lida Gholamian
               </span>
             </div>
           </div>

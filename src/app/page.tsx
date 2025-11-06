@@ -8,30 +8,31 @@ import { IconArrowLeftFill } from "./_components/icons/icons";
 import { BlogPostSummary } from "@/types/blog-post-summary.interface";
 import { BlogPostCardList } from "./(blog)/_components/blog-post-card-list";
 import { API_URL } from "@/configs/global";
-import { Suspense } from "react";
-import { CardPlaceholder } from "./_components/placeholder";
 import { TestimonialList } from "./_components/testimonial/testimonial-list";
 import { testimonials } from "@/data/testimonial";
 
-// async function getNewestCourses(count: Number): Promise<CourseSummary[]> {
-//   const res = await fetch(`${API_URL}/courses/newest/${count}`, {
-//     next: { revalidate: 24 * 60 * 60 },
-//   });
-//   return res.json();
-// }
-
-async function getNewestPosts(count: number): Promise<BlogPostSummary[]> {
-  const res = await fetch(`${API_URL}/blog/newest/${count}`);
+async function getNewestCourses(count: number): Promise<CourseSummary[]> {
+  const res = await fetch(`${API_URL}/courses/newest/${count}`, {
+    next: { revalidate: 24 * 60 * 60 },
+    cache: "no-store",
+  });
   return res.json();
 }
 
+async function getNewestPosts(count: number): Promise<BlogPostSummary[]> {
+  const res = await fetch(`${API_URL}/blog/newest/${count}`, {
+    next: { revalidate: 24 * 60 * 60 },
+  });
+  return res.json();
+}
 export default async function Home() {
-  // const newestCoursesData = getNewestCourses(4);
+  const newestCoursesData = getNewestCourses(4);
   const newestBlogPostsData = getNewestPosts(4);
   // Wait for the promises to resolve
-  const [newestBlogPosts] = await Promise.all([newestBlogPostsData]);
-  console.log(newestBlogPosts);
-
+  const [newestBlogPosts, newestCourses] = await Promise.all([
+    newestBlogPostsData,
+    newestCoursesData,
+  ]);
   return (
     <>
       <HomeHeroSection />
@@ -42,17 +43,14 @@ export default async function Home() {
           ))}
         </div>
       </section>
-      <section className="container pt-20">
+      <section className="container  pt-20">
         <div className="text-center xl:text-right">
-          <h2 className="text-2xl font-extrabold">جدیدترین دوره‌های آموزشی</h2>
+          <h2 className="text-2xl font-extrabold">تازه ترین دوره های آموزشی</h2>
           <p className="mt-3 text-lg">
             برای به‌روز موندن، یاد گرفتن نکته‌های تازه ضروری‌ه!
           </p>
         </div>
-        <Suspense fallback={<CardPlaceholder count={4} className="mt-5" />}>
-          <CourseCardList courses={[]} />
-        </Suspense>
-        {/* <CourseCardList courses={newestCourses} /> */}
+        <CourseCardList courses={newestCourses} />
       </section>
       <section className="px-2 my-40">
         {/* <div className="sticky top-0 pt-0 text-center"> */}
@@ -61,7 +59,7 @@ export default async function Home() {
 
           <h2
             lang="en"
-            className="gradient leading-[1.3] relative z-10 mx-auto inline-block text-[clamp(2rem,6vw,5.5rem)] font-black"
+            className="gradient-reverse leading-[1.3] relative z-10 mx-auto inline-block text-[clamp(2rem,6vw,5.5rem)] font-black"
           >
             ReactJs & Next.js
           </h2>
@@ -71,19 +69,26 @@ export default async function Home() {
             یادگیری رو شروع کن ما هم از ابتدای مسیر با آموزش‌های تخصصی و کاملاً
             کاربردی کنارت هستیم.
           </p>
-          <div className="flex flex-col lg:flex-row items-center gap-3 justify-center">
-            <Button variant="primary" size="large" className="mt-7">
+          <div className="flex gap-3 justify-center">
+            <Button
+              variant="primary"
+              size="large"
+              className="mt-7"
+            >
               دوره‌های ری اکت و نکست‌ جی‌اس
               <IconArrowLeftFill fill="currentColor" />
             </Button>
-            <Button variant="neutral" size="large" className="mt-7">
+            <Button
+              variant="neutral"
+              size="large"
+              className="mt-7"
+            >
               مقالات ری اکت و نکست‌ جی‌اس
             </Button>
           </div>
         </div>
       </section>
-
-      <section className="px-2 my-40">
+      <section className="container py-20">
         <div className="flex flex-col xl:flex-row gap-4 justify-center xl:justify-between items-center">
           <div className="text-center xl:text-right">
             <h2 className="text-2xl font-extrabold">
@@ -94,7 +99,10 @@ export default async function Home() {
               می‌ذاریم؛ چون پیشرفتت برامون مهمه!
             </p>
           </div>
-          <Button variant="neutral" className="font-semibold">
+          <Button
+            variant="neutral"
+            className="font-semibold"
+          >
             همه مقاله‌ها
             <IconArrowLeftFill fill="currentColor" />
           </Button>
