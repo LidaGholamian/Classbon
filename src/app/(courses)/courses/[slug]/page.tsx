@@ -40,9 +40,9 @@ export default async function CourseDetails({
       <div className="col-span-10 xl:col-span-3">
         <Rating rate={3} size="small" variant="info" />
         <Progress value={75} variant="warning" />
-        {/* <Progress value={75} variant="warning" size="tiny" />
+        <Progress value={75} variant="warning" size="tiny" />
         <Progress value={75} variant="error" size="tiny" />
-        <Progress value={75} variant="info" size="tiny" /> */}
+        <Progress value={75} variant="info" size="tiny" />
       </div>
       <div className="col-span-10 xl:col-span-6 bg-info"></div>
       <div className="col-span-10 xl:col-span-4 bg-warning"></div>
