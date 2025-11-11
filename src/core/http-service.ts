@@ -17,15 +17,22 @@ httpService.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error?.response) {
-      const statusCode = error?.response?.status;
-      if (statusCode >= 400) {
-        const errorData: ApiError = error.response.data;
-        errorHandler[statusCode](errorData);
-      } else {
-        networkErrorStrategy();
-      }
-    }
+     if (error?.response) {
+            const statusCode = error?.response?.status;
+            if (statusCode >= 400) {
+                const errorData: ApiError = error.response?.data;
+
+                const handler = errorHandler[statusCode];
+                if (handler) {
+                    handler(errorData);
+                } else {
+                    // Fallback for unhandled status codes
+                    errorHandler[500](errorData);
+                }
+            }
+        } else {
+            networkErrorStrategy();
+        }
   }
 );
 

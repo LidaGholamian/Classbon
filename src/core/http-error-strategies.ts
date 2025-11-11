@@ -1,48 +1,43 @@
-import {
-  ApiError,
-  BadRequestError,
-  NetworkError,
-  UnhandledException,
-  ValidationError,
-} from '@/types/http-errors.interface';
+import { ApiError, BadRequestError, NetworkError, NotFoundError, UnauthorizedError, UnhandledException, ValidationError } from "@/types/http-errors.interface";
 
-type ApiErrorHandler = (errorData: ApiError) => void;
+export type ApiErrorHandler = (errorData: ApiError) => void;
 
-const badRequestErrorStrategy: ApiErrorHandler = (errorData) => {
-  throw {
-    ...errorData,
-  } as BadRequestError;
+export const badRequestErrorStrategy: ApiErrorHandler = errorData => {
+    throw {
+        ...errorData,
+    } as BadRequestError;
+}
+
+
+export const validationErrorStrategy: ApiErrorHandler = (errorData) => {
+    debugger;
+    throw { ...errorData } as ValidationError;
 };
 
-const validateErrorStrategy: ApiErrorHandler = (errorData) => {
-  throw {
-    ...errorData,
-  } as ValidationError;
-};
-const unauthorizedErrorStrategy: ApiErrorHandler = (errorData) => {
-  throw {
-    ...errorData,
-    detail: 'دسترسی به سرویس موردنظر امکان پذیر نمی باشد!',
-  };
+export const notFoundErrorStrategy: ApiErrorHandler = (errorData) => {
+    throw { ...errorData, details: "سرویس مورد نظر یافت نشد" } as NotFoundError;
 };
 
-const unhandleErrorStrategy: ApiErrorHandler = (errorData) => {
-  throw {
-      ...errorData,
-      detail: 'خطای سرور',
-  } as unknown as UnhandledException;
+export const unauthorizedErrorStrategy: ApiErrorHandler = (errorData) => {
+    throw {
+        ...errorData,
+        details: "دسترسی به سرویس مورد نظر امکان پذیر نمی باشد",
+    } as UnauthorizedError;
+};
+
+export const unhandledExceptionStrategy: ApiErrorHandler = (errorData) => {
+    throw { ...errorData, details: "خطای سرور" } as UnhandledException;
 };
 
 export const networkErrorStrategy = () => {
-  throw {
-      detail: 'خطای شبکه',
-  } as unknown as NetworkError;
+    throw { details: "خطای شبکه" } as NetworkError;
 };
 
+
+
 export const errorHandler: Record<number, ApiErrorHandler> = {
-  400: (errorData) =>
-    errorData.errors ? validateErrorStrategy : badRequestErrorStrategy,
-  403: unauthorizedErrorStrategy,
-  404: networkErrorStrategy,
-  500: unhandleErrorStrategy,
-};
+    400: (errorData) => (errorData.errors ? validationErrorStrategy : badRequestErrorStrategy)(errorData),
+    403: unauthorizedErrorStrategy,
+    404: notFoundErrorStrategy,
+    500: unhandledExceptionStrategy
+}

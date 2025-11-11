@@ -4,6 +4,8 @@ import { CourseAside } from "./_components/course-aside";
 import { Tab } from "@/types/tab.type";
 import { Tabs } from "@/app/_components/tabs";
 import { Accordion as AccordionType } from "@/types/accordion";
+import CourseComments from "./_components/comments/course-comments";
+import { Accordion } from "@/app/_components/accordion";
 
 export async function generateStaticParams() {
   const slugs = await fetch(`${API_URL}/courses/slugs`).then((res) =>
@@ -37,18 +39,14 @@ export default async function CourseDetails({
     {
       label: "مشخصات دوره",
       content: course.description,
-      type: "string",
     },
     {
       label: "دیدگاه‌ها و پرسش",
-      content: "course comments",
-      type: "string",
+      content: <CourseComments />,
     },
     {
       label: "سوالات متداول",
-      type: "faq",
-      faqData: faqs,
-      content: "",
+      content: <Accordion data={faqs} />,
     },
   ];
 
