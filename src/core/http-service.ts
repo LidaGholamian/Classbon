@@ -1,11 +1,24 @@
-import { API_URL} from "@/configs/global";
-import {ApiError} from '@/types/http-errors.interface';
-import {errorHandler, networkErrorStrategy} from './http-error-strategies';
+import { API_URL } from "@/configs/global";
 
-import axios, {AxiosRequestConfig,
-  AxiosRequestHeaders,
-  AxiosResponse,} from "axios";
-export const httpService = axios.create({
+import {
+    BadRequestError,
+    NetworkError,
+    NotFoundError,
+    UnhandledException,
+    UnauthorizedError,
+    ValidationError,
+} from "@/types/http-errors.interface";
+import axios, { AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from "axios";
+
+type ApiError =
+    | BadRequestError
+    | NetworkError
+    | NotFoundError
+    | UnhandledException
+    | UnauthorizedError
+    | ValidationError;
+
+const httpService = axios.create({
     baseURL: API_URL,
     headers: {
         "Content-Type": "application/json",
@@ -13,83 +26,113 @@ export const httpService = axios.create({
 });
 
 httpService.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-     if (error?.response) {
+    (response) => {
+        return response;
+    },
+    (error) => {
+        if (error?.response) {
             const statusCode = error?.response?.status;
             if (statusCode >= 400) {
                 const errorData: ApiError = error.response?.data;
 
-                const handler = errorHandler[statusCode];
-                if (handler) {
-                    handler(errorData);
-                } else {
-                    // Fallback for unhandled status codes
-                    errorHandler[500](errorData);
+                if (statusCode === 400 && !errorData.errors) {
+                    throw {
+                        ...errorData,
+                    } as BadRequestError;
                 }
+
+                if (statusCode === 400 && errorData.errors) {
+                    throw {
+                        ...errorData,
+                    } as ValidationError;
+                }
+
+                if (statusCode === 404) {
+                    throw {
+                        ...errorData,
+                        detail: "سرویس مو.رد نظر یافت نشد",
+                    } as NotFoundError;
+                }
+
+                if (statusCode === 403) {
+                    throw {
+                        ...errorData,
+                        detail: "دسترسی به سرویس مورد نظر امکان پذیر نمی باشد",
+                    } as UnauthorizedError;
+                }
+
+                if (statusCode >= 500) {
+                    throw {
+                        ...errorData,
+                        detail: "خطای سرور",
+                    } as UnhandledException;
+                }
+            } else {
+                throw {
+                    detail: 'خطای شبکه'
+                } as NetworkError
             }
-        } else {
-            networkErrorStrategy();
         }
-  }
+    }
 );
 
 async function apiBase<T>(
-  url: string,
-  options?: AxiosRequestConfig
+    url: string,
+    options?: AxiosRequestConfig
 ): Promise<T> {
-  const response: AxiosResponse = await httpService(url, options);
-  return response.data as T;
+    const response: AxiosResponse = await httpService(url,options);
+    return response.data as T;
 }
 
 async function readData<T>(
-  url: string,
-  headers?: AxiosRequestHeaders
+    url: string,
+    headers?: AxiosRequestHeaders
 ): Promise<T> {
-  const options: AxiosRequestConfig = {
-    headers,
-    method: 'GET',
-  };
-  return await apiBase<T>(url, options);
+    const options: AxiosRequestConfig = {
+        headers: headers,
+        method: 'GET'
+    }
+    return await apiBase<T>(url, options);
 }
 
-async function createData<TModel, TResult>(
-  url: string,
-  data: TModel,
-  headers?: AxiosRequestHeaders
+async function createData<TModel, TResult> (
+    url: string,
+    data: TModel,
+    headers?: AxiosRequestHeaders
 ): Promise<TResult> {
-  const options: AxiosRequestConfig = {
-    method: 'POST',
-    headers,
-    data: JSON.stringify(data),
-  };
-  return await apiBase<TResult>(url, options);
+    const options: AxiosRequestConfig = {
+        method: 'POST',
+        headers: headers,
+        data: JSON.stringify(data)
+    };
+
+    return await apiBase<TResult>(url, options);
 }
 
-async function updateData<TModel, TResult>(
-  url: string,
-  data: TModel,
-  headers?: AxiosRequestHeaders
+async function updateData<TModel, TResult> (
+    url: string,
+    data: TModel,
+    headers?: AxiosRequestHeaders
 ): Promise<TResult> {
-  const options: AxiosRequestConfig = {
-    method: 'PUT',
-    headers,
-    data: JSON.stringify(data),
-  };
-  return await apiBase<TResult>(url, options);
+    const options: AxiosRequestConfig = {
+        method: 'PUT',
+        headers: headers,
+        data: JSON.stringify(data)
+    };
+
+    return await apiBase<TResult>(url, options);
 }
 
 async function deleteData(
-  url: string,
-  headers?: AxiosRequestHeaders
-): Promise<void> {
-  const options: AxiosRequestConfig = {
-    method: 'DELETE',
-    headers,
-  };
-  return await apiBase(url, options);
-}
+    url: string,
+    headers?: AxiosRequestHeaders
+  ): Promise<void> {
+    const options: AxiosRequestConfig = {
+      method: "DELETE",
+      headers: headers,
+    };
 
-export {readData, createData, deleteData, updateData};
+    return await apiBase(url, options);
+  }
+
+  export {createData, readData, updateData, deleteData}
