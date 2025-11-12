@@ -24,9 +24,10 @@ async function getCourse(slug: string): Promise<CourseDetails> {
 export default async function CourseDetails({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const { slug } = params;
+  const resolvedParams = await params;
+  const { slug } = resolvedParams;
   const course = await getCourse(slug);
   const faqs: AccordionType[] =
     course.frequentlyAskedQuestions?.map((faq) => ({
