@@ -3,6 +3,7 @@ import { Vazirmatn, Figtree } from "next/font/google";
 
 import { Footer } from "./_components/footer";
 import { Header } from "./_components/header";
+import QueryProvider from "@/providers/react-query-provider";
 
 const figtree = Figtree({
   display: "swap",
@@ -29,9 +30,11 @@ export default function RootLayout({
       className={`dark ${vazirmatn.variable} ${figtree.variable}`}
     >
       <body className="min-h-screen grid grid-rows-[80px_1fr_auto] dark:bg-base-100 dark:text-base-content">
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <QueryProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </QueryProvider>
       </body>
     </html>
   );
