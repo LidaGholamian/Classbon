@@ -5,9 +5,9 @@ import { useCourseComments } from "../../_api/get-comments";
 import { Comment } from "@/app/_components/comment";
 import { TextPlaceholder } from "@/app/_components/placeholder";
 import { Fragment, useEffect } from "react";
-import { Button } from "@/app/_components/button";
-import { IconRefresh } from "@/app/_components/icons/icons";
 import { useInView } from "react-intersection-observer";
+import { Button } from "@/app/_components/button/button";
+import { IconRefresh } from "@/app/_components/icons/icons";
 
 const CourseComments = () => {
   const { ref, inView } = useInView({});
