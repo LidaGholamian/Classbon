@@ -16,7 +16,7 @@ const getComments= ({params}:GetCommentsOptions): Promise<CourseCommentList> => 
 }
 
 export const useCourseComments = ({params}: GetCommentsOptions) => {
-    const {data, error, isFetchingNextPage, fetchNextPage, hasNextPage, refetch } = useInfiniteQuery({
+    const {data, error, isFetchingNextPage, fetchNextPage, hasNextPage, refetch,isFetching } = useInfiniteQuery({
         queryKey: ["courseComments", params.slug],
         queryFn: ({ pageParam }) =>
             getComments({ params: { ...params, page: pageParam } }),
@@ -26,5 +26,5 @@ export const useCourseComments = ({params}: GetCommentsOptions) => {
         gcTime: 6 * 60 * 60 * 1000,
     })
 
-    return {data,error, isFetchingNextPage, fetchNextPage, hasNextPage, refetch};
+    return {data,error, isFetchingNextPage, fetchNextPage, hasNextPage, refetch, isFetching};
 }
