@@ -1,4 +1,4 @@
-import { Accordion } from "./accordion";
+import React from "react";
 
 export type Tab = {
     label: string;
