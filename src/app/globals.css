@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@import "../tailwind/components/components.css";
+@import "../tailwind/components.css" layer(components);
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -53,8 +53,6 @@
 
 /* Apply Colors to Tailwind */
 @theme {
-  --color-*: initial;
-
   --color-current: var(--current);
   --color-transparent: var(--clb-c-transparent);
   --color-white: var(--clb-c-white);
@@ -92,11 +90,27 @@
 
 @layer base {
   body {
-    font-family: var(--font-vazirmatn);
+    font-family: var(--font-yekanbakh);
   }
 
   :lang(en) {
     font-family: var(--font-figtree);
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .fade-in {
+    animation: fadeIn 0.8s ease forwards;
   }
 }
 
@@ -110,6 +124,10 @@
   }
 
   .gradient {
-    @apply bg-linear-to-r from-gradient-first to-gradient-second text-transparent bg-clip-text;
+    @apply bg-gradient-to-r from-gradient-first to-gradient-second text-transparent bg-clip-text;
+  }
+
+  .gradient-reverse {
+    @apply bg-gradient-to-r from-gradient-second to-gradient-first text-transparent bg-clip-text;
   }
 }
