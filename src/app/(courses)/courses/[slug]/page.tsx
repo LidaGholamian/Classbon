@@ -1,13 +1,17 @@
+import { Progress } from "@/app/_components/progress";
+import { Rating } from "@/app/_components/rating";
 import { API_URL } from "@/configs/global";
 import type { CourseDetails } from "@/types/course-details.interface";
 import { CourseAside } from "./_components/course-aside";
 import { Tab } from "@/types/tab.type";
 import { Tabs } from "@/app/_components/tabs";
+import { Accordion } from "@/app/_components/accordion";
 import { Accordion as AccordionType } from "@/types/accordion";
 import CourseComments from "./_components/comments/course-comments";
-import { Accordion } from "@/app/_components/accordion";
 import { CourseChapter } from "@/types/course-chapter.interface";
-import { CourseCurriculum } from "./_components/curriculum";
+import { CourseCurriculum } from "./_components/curriculum/course-curriculum";
+import Image from "next/image";
+import { VideoPlayer } from "@/app/_components/video-player";
 
 export async function generateStaticParams() {
   const slugs = await fetch(`${API_URL}/courses/slugs`).then((res) =>
@@ -34,7 +38,7 @@ export default async function CourseDetails({
 }: {
   params: { slug: string };
 }) {
-  const { slug } = params;
+  const { slug } = await params;
   const courseData = getCourse(slug);
   const courseCurriculumData = getCurriculum(slug);
 
@@ -75,7 +79,22 @@ export default async function CourseDetails({
           {course.subTitle}
         </h2>
 
-        <div className=" mt-5">Video Player Component</div>
+        <div className=" mt-5">
+          {course.videoUrl ? (
+            <VideoPlayer
+              src={course.videoUrl}
+              poster={`${API_URL}/picture/${course.coverImageId}`}
+            />
+          ) : (
+            <Image
+              src={`https://api.classbon.com/api/picture/${course.coverImageId}`}
+              alt={course.title}
+              width={550}
+              height={327}
+              className="w-full"
+            />
+          )}
+        </div>
       </div>
       <div className="col-span-10 xl:col-span-3">
         <CourseAside {...course} />
