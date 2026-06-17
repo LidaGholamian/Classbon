@@ -1,5 +1,7 @@
+import SignInForm from "./components/signin-form";
+
 export default async function Signin(){
     return (
-        <h1>this is sign in page</h1>
+       <SignInForm />
     )
 }
