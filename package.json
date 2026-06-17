@@ -18,7 +18,9 @@
     "nextjs-toploader": "^3.9.17",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "react-intersection-observer": "^10.0.0"
+    "react-hook-form": "^7.79.0",
+    "react-intersection-observer": "^10.0.0",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
