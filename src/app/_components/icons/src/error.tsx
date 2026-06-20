@@ -1,7 +1,8 @@
 "use client";
 
 import BaseIcon from "@/app/_components/icons/base-icon";
-import { SvgIcons } from "@/app/_components/icons/icon.types";
+import { SvgIcons } from "../icon.types";
+
 
 export default function SvgIcon(props: SvgIcons) {
   return (

@@ -1,9 +1,9 @@
 "use client";
 import React, { FC, SVGAttributes } from "react";
-import { SvgIcon } from "./icon.types";
+import { SvgIcons } from "./icon.types";
 
 // eslint-disable-next-line react/display-name
-export const BaseIcon: FC<SvgIcon> = ({
+export const BaseIcon: FC<SvgIcons> = ({
   color = "currentColor",
   width = 24,
   height = 24,
