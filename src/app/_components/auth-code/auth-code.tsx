@@ -8,7 +8,6 @@ import classNames from "classnames";
 const AuthCode = forwardRef<AuthCodeRef, AuthCodeProps>(({
     variant = "ghost",
     autoFocus = true,
-    className,
     isDisabled,
     length = 5,
     onChange,
