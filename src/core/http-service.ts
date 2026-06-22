@@ -1,111 +1,97 @@
 import { API_URL } from "@/configs/global";
-import axios, {
-  AxiosRequestConfig,
-  AxiosRequestHeaders,
-  AxiosResponse,
-} from "axios";
 
-import { ApiError } from "@/types/http-errors.interface";
 import {
-  errorHandler,
-  networkErrorStrategy,
-} from "./http-error-strategies";
+    ApiError,
+} from "@/types/http-errors.interface";
+import axios, {
+    AxiosRequestConfig,
+    AxiosRequestHeaders,
+    AxiosResponse,
+} from "axios";
+import { errorHandler, networkErrorStrategy } from "./http-error-strategies";
 
 const httpService = axios.create({
-  baseURL: API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
+    baseURL: API_URL,
+    headers: {
+        "Content-Type": "application/json",
+    },
 });
 
-// Interceptor for response
 httpService.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    // response from server
-    if (error?.response) {
-      const statusCode = error.response.status;
-      const errorData: ApiError = error.response.data;
+    (response) => {
+        return response;
+    },
+    (error) => {
+        if (error?.response) {
+            const statusCode = error?.response?.status;
+            if (statusCode >= 400) {
+                const errorData: ApiError = error.response?.data;
 
-      if (statusCode >= 400) {
-        const handler = errorHandler[statusCode];
-        if (handler) {
-          handler(errorData);
+                errorHandler[statusCode](errorData);
+            }
         } else {
-          throw new Error(`Unhandled HTTP Status: ${statusCode}`);
+            networkErrorStrategy();
         }
-      }
-    } else {
-      networkErrorStrategy();
     }
-    return Promise.reject(error);
-  }
 );
 
 async function apiBase<T>(
-  url: string,
-  options?: AxiosRequestConfig
+    url: string,
+    options?: AxiosRequestConfig
 ): Promise<T> {
-  const response: AxiosResponse = await httpService(url, options);
-  return response.data as T;
+    const response: AxiosResponse = await httpService(url, options);
+    return response.data as T;
 }
 
-// GET
 async function readData<T>(
-  url: string,
-  headers?: AxiosRequestHeaders
+    url: string,
+    headers?: AxiosRequestHeaders
 ): Promise<T> {
-  const options: AxiosRequestConfig = {
-    method: "GET",
-    headers,
-  };
-
-  return await apiBase<T>(url, options);
+    const options: AxiosRequestConfig = {
+        headers: headers,
+        method: "GET",
+    };
+    return await apiBase<T>(url, options);
 }
 
-// POST
 async function createData<TModel, TResult>(
-  url: string,
-  data: TModel,
-  headers?: AxiosRequestHeaders
+    url: string,
+    data: TModel,
+    headers?: AxiosRequestHeaders
 ): Promise<TResult> {
-  const options: AxiosRequestConfig = {
-    method: "POST",
-    headers,
-    data: JSON.stringify(data),
-  };
+    const options: AxiosRequestConfig = {
+        method: "POST",
+        headers: headers,
+        data: JSON.stringify(data),
+    };
 
-  return await apiBase<TResult>(url, options);
+    return await apiBase<TResult>(url, options);
 }
 
-// PUT
 async function updateData<TModel, TResult>(
-  url: string,
-  data: TModel,
-  headers?: AxiosRequestHeaders
+    url: string,
+    data: TModel,
+    headers?: AxiosRequestHeaders
 ): Promise<TResult> {
-  const options: AxiosRequestConfig = {
-    method: "PUT",
-    headers,
-    data: JSON.stringify(data),
-  };
+    const options: AxiosRequestConfig = {
+        method: "PUT",
+        headers: headers,
+        data: JSON.stringify(data),
+    };
 
-  return await apiBase<TResult>(url, options);
+    return await apiBase<TResult>(url, options);
 }
 
-// DELETE
 async function deleteData(
-  url: string,
-  headers?: AxiosRequestHeaders
+    url: string,
+    headers?: AxiosRequestHeaders
 ): Promise<void> {
-  const options: AxiosRequestConfig = {
-    method: "DELETE",
-    headers,
-  };
+    const options: AxiosRequestConfig = {
+        method: "DELETE",
+        headers: headers,
+    };
 
-  await apiBase(url, options);
+    return await apiBase(url, options);
 }
 
 export { createData, readData, updateData, deleteData };
