@@ -8,8 +8,9 @@ const VerificationForm = () => {
       <h5 className="text-2xl">کد تایید</h5>
       <p className="mt-2">دنیای شگفت انگیز برنامه نویسی در انتظار شماست!</p>
       <form className="flex flex-col gap-6 mt-10 flex-1">
-        <AuthCode className="mt-10" onChange={
-          value =>{} //setState
+        <AuthCode className="mt-10" onChange={(value) => {
+                        console.log(value);
+                    }
         } />
         Timer
         <Button isLink={true}>ارسال مجدد کد تایید</Button>
