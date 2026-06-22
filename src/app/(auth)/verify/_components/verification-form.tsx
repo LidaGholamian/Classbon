@@ -1,3 +1,4 @@
+import AuthCode from "@/app/_components/auth-code/auth-code";
 import { Button } from "@/app/_components/button/button";
 import Link from "next/link";
 
@@ -7,7 +8,9 @@ const VerificationForm = () => {
       <h5 className="text-2xl">کد تایید</h5>
       <p className="mt-2">دنیای شگفت انگیز برنامه نویسی در انتظار شماست!</p>
       <form className="flex flex-col gap-6 mt-10 flex-1">
-        <p>Auth code</p>
+        <AuthCode className="mt-10" onChange={
+          value =>{} //setState
+        } />
         Timer
         <Button isLink={true}>ارسال مجدد کد تایید</Button>
         <Button type="submit" variant="primary">
