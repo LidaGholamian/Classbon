@@ -18,11 +18,12 @@ const calculateTotalSeconds = (
   seconds: number,
 ): number => days * 24 * 60 * 60 + hours * 60 * 60 + minutes * 60 + seconds;
 
+// eslint-disable-next-line react/display-name
 export const Timer = forwardRef<TimerRef, TimerProps>(
   (
     {
       expiryTimestamp,
-      autoStart = false,
+      autoStart,
       onExpire,
       size = "normal",
       className,
@@ -33,7 +34,7 @@ export const Timer = forwardRef<TimerRef, TimerProps>(
     },
     ref,
   ) => {
-    const { days, hours, minutes, seconds, start, pause, restart, resume } =
+    const { days, hours, minutes, seconds, start, pause, resume, restart } =
       useTimer({ expiryTimestamp, onExpire, autoStart });
 
     const classes = classNames(
