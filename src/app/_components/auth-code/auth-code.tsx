@@ -92,7 +92,7 @@ const AuthCode = forwardRef<AuthCodeRef, AuthCodeProps>(
             inputsRef.current[i].value = "";
           }
 
-          inputsRef.current[0].focus();
+          inputsRef.current[0]?.focus();
         }
 
         sendResult();
