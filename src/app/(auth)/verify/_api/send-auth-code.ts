@@ -2,8 +2,8 @@
 import { createData } from "@/core/http-service";
 import { useMutation } from "@tanstack/react-query";
 
-export const SendAuthCode = (username: string): Promise<any> => {
-  return createData("/send-auth-code", { username });
+export const SendAuthCode = (mobile: string): Promise<any> => {
+  return createData("/send-auth-code", { mobile });
 };
 
 type UseSendAuthCodeOptions = {
