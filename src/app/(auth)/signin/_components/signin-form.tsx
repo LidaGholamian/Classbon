@@ -59,17 +59,6 @@ const SignInForm = () => {
         <TextInput<SignIn>
           register={register}
           name={"mobile"}
-          rules={{
-            required: "شماره موبایل الزامی است",
-            maxLength: {
-              value: 11,
-              message: "شماره موبایل باید 11 رقم باشد",
-            },
-            minLength: {
-              value: 11,
-              message: "شماره موبایل باید 11 رقم باشد",
-            },
-          }}
           errors={errors}
         />
 
