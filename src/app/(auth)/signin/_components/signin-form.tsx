@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import { useNotificationStore } from "@/store/notification.store";
 import { useEffect } from "react";
 import { useSignIn } from "../_api/signin";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signInSchema } from "../_types/signin.schema";
 
 const SignInForm = () => {
   const {
@@ -15,7 +17,9 @@ const SignInForm = () => {
     handleSubmit,
     formState: { errors },
     getValues,
-  } = useForm<SignIn>();
+  } = useForm<SignIn>({
+    resolver: zodResolver(signInSchema),
+  });
 
   const router = useRouter();
 
