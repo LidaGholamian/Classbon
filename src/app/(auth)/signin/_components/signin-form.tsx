@@ -6,10 +6,12 @@ import { useForm } from "react-hook-form";
 import { TextInput } from "@/app/_components/form-input";
 import { useRouter } from "next/navigation";
 import { useNotificationStore } from "@/store/notification.store";
-import { useEffect } from "react";
+import { useEffect, useTransition } from "react";
 import { useSignIn } from "../_api/signin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInSchema } from "../_types/signin.schema";
+import Signin from "../page";
+import { signInAction } from "@/app/_actions/auth-actions";
 
 const SignInForm = () => {
   const {
@@ -22,6 +24,8 @@ const SignInForm = () => {
   });
 
   const router = useRouter();
+
+  const [isPending, startTransition] = useTransition();
 
   const showNotification = useNotificationStore(
     (state) => state.showNotification,
@@ -38,7 +42,10 @@ const SignInForm = () => {
   });
 
   const onSubmit = (data: SignIn) => {
-    signIn.submit(data);
+    // signIn.submit(data);
+    startTransition(async () => {
+      const response = await signInAction(data);
+    });
   };
 
   useEffect(() => {
