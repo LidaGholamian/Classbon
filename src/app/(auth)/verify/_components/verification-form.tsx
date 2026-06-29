@@ -15,7 +15,7 @@ import { VerifyUserModel } from "../_types/verify-user.types";
 
 const getTwoMinutesFromNow = () => {
   const time = new Date();
-  time.setSeconds(time.getSeconds() + 10);
+  time.setSeconds(time.getSeconds() + 120);
   return time;
 };
 
@@ -57,6 +57,8 @@ const VerificationForm = () => {
   });
 
   const resendAuthCode = () => {
+    console.log("mobile =", username);
+
     timerRef.current?.restart(getTwoMinutesFromNow());
     setShowResendCode(false);
     sendAuthCode.submit(username);
