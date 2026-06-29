@@ -45,15 +45,16 @@ const SignInForm = () => {
     // signIn.submit(data);
     startTransition(async () => {
       const response = await signInAction(data);
+      if (response.isSuccess) {
+        console.log(response.response);
+      } else {
+        showNotification({
+          message: response.error?.detail!,
+          type: "error",
+        });
+      }
     });
   };
-
-  useEffect(() => {
-    showNotification({
-      type: "error",
-      message: "error",
-    });
-  }, []);
 
   return (
     <>
