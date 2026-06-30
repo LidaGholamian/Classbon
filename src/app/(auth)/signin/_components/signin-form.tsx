@@ -6,12 +6,10 @@ import { useForm } from "react-hook-form";
 import { TextInput } from "@/app/_components/form-input";
 import { useRouter } from "next/navigation";
 import { useNotificationStore } from "@/store/notification.store";
-import { useEffect, useTransition } from "react";
-import { useSignIn } from "../_api/signin";
+import { useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInSchema } from "../_types/signin.schema";
-import Signin from "../page";
-import { signInAction } from "@/app/_actions/auth-actions";
+import { signInAction } from "@/actions/auth";
 
 const SignInForm = () => {
   const {
@@ -25,35 +23,30 @@ const SignInForm = () => {
 
   const router = useRouter();
 
-  const [isPending, startTransition] = useTransition();
-
   const showNotification = useNotificationStore(
     (state) => state.showNotification,
   );
 
-  const signIn = useSignIn({
-    onSuccess: () => {
-      router.push(`/verify?mobile=${getValues("mobile")}`);
-      showNotification({
-        message: "کد تایید به شماره موبایل شما ارسال شد",
-        type: "info",
-      });
-    },
-  });
+  //  router.push(`/verify?mobile=${getValues("mobile")}`);
+  //  showNotification({
+  //    message: "کد تایید به شماره موبایل شما ارسال شد",
+  //    type: "info",
+  //  });
 
   const onSubmit = (data: SignIn) => {
     // signIn.submit(data);
-    startTransition(async () => {
-      const response = await signInAction(data);
-      if (response.isSuccess) {
-        console.log(response.response);
-      } else {
-        showNotification({
-          message: response.error?.detail!,
-          type: "error",
-        });
-      }
-    });
+    signInAction(data.mobile);
+    // startTransition(async () => {
+    //   const response = await signInAction(data);
+    //   if (response.isSuccess) {
+    //     console.log(response.response);
+    //   } else {
+    //     showNotification({
+    //       message: response.error?.detail!,
+    //       type: "error",
+    //     });
+    //   }
+    // });
   };
 
   return (
@@ -70,7 +63,7 @@ const SignInForm = () => {
           errors={errors}
         />
 
-        <Button type="submit" variant="primary" isLoading={signIn.isPending}>
+        <Button type="submit" variant="primary">
           تایید و دریافت کد
         </Button>
       </form>
